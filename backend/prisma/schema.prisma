@@ -1,0 +1,186 @@
+// Esra Cakes — Prisma schema
+// Run `npx prisma migrate dev` after configuring DATABASE_URL in .env
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SUPERADMIN
+}
+
+enum CakeCategory {
+  BIRTHDAY
+  WEDDING
+  ANNIVERSARY
+  KIDS
+  CORPORATE
+  CUSTOM
+}
+
+enum OrderStatus {
+  PENDING
+  REVIEWING
+  QUOTE_SENT
+  CONFIRMED
+  BAKING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum FulfillmentType {
+  PICKUP
+  DELIVERY
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orderNotes OrderNote[]
+
+  @@map("admins")
+}
+
+model Cake {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique
+  description   String
+  category      CakeCategory
+  flavours      String[] // e.g. ["Chocolate Truffle", "Red Velvet"]
+  sizes         String[] // e.g. ["6-inch (8 servings)", "8-inch (16 servings)"]
+  startingPrice Decimal      @db.Decimal(10, 2)
+  isAvailable   Boolean      @default(true)
+  isFeatured    Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  images CakeImage[]
+  orders Order[]
+
+  @@index([category])
+  @@map("cakes")
+}
+
+model CakeImage {
+  id        String   @id @default(cuid())
+  cakeId    String
+  url       String
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  cake Cake @relation(fields: [cakeId], references: [id], onDelete: Cascade)
+
+  @@map("cake_images")
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  // human-friendly reference shown to customers, e.g. EC-2026-0042
+  reference String   @unique
+
+  // contact
+  name  String
+  email String
+  phone String
+
+  // cake spec
+  cakeId       String?
+  occasion     String
+  flavour      String
+  size         String
+  requiredDate DateTime
+  theme        String?
+  message      String?
+  instructions String?
+  budget       Decimal? @db.Decimal(10, 2)
+
+  // fulfillment
+  fulfillment FulfillmentType
+  address     String?
+
+  status    OrderStatus @default(PENDING)
+  quote     Decimal?    @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cake            Cake?                 @relation(fields: [cakeId], references: [id])
+  referenceImages OrderReferenceImage[]
+  notes           OrderNote[]
+
+  @@index([status])
+  @@index([email])
+  @@map("orders")
+}
+
+model OrderReferenceImage {
+  id        String   @id @default(cuid())
+  orderId   String
+  url       String
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_reference_images")
+}
+
+model OrderNote {
+  id        String   @id @default(cuid())
+  orderId   String
+  adminId   String?
+  note      String
+  createdAt DateTime @default(now())
+
+  order Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  admin Admin? @relation(fields: [adminId], references: [id])
+
+  @@map("order_notes")
+}
+
+model Review {
+  id         String       @id @default(cuid())
+  name       String
+  rating     Int // 1-5
+  message    String
+  occasion   String?
+  status     ReviewStatus @default(PENDING)
+  isFeatured Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@map("reviews")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}

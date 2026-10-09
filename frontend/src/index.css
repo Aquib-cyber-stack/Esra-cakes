@@ -1,0 +1,269 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #FBF1E6;
+  --blush: #F3DAD1;
+  --blush-soft: #F8E7E0;
+  --berry: #7A1F3D;
+  --berry-dark: #4A1226;
+  --gold: #C89B3C;
+  --pistachio: #8FA97D;
+  --ink: #2E1C16;
+  --ink-soft: #6B5850;
+  --paper: #FFFDF9;
+  --radius: 22px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .wrap {
+    @apply max-w-[1160px] mx-auto px-5 sm:px-7;
+  }
+
+  .eyebrow {
+    @apply font-sans font-bold text-[12.5px] tracking-[.16em] uppercase text-berry;
+  }
+
+  .heading {
+    @apply font-serif font-medium text-berry-dark tracking-[-0.01em];
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 font-sans font-bold text-[15px] px-6 py-3.5 rounded-full cursor-pointer border-[1.5px] border-transparent transition-all duration-200 whitespace-nowrap;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .btn-primary {
+    background: var(--berry);
+    color: var(--paper);
+    box-shadow: 0 10px 24px -10px rgba(122, 31, 61, 0.55);
+  }
+  .btn-primary:hover {
+    background: var(--berry-dark);
+    box-shadow: 0 14px 28px -10px rgba(122, 31, 61, 0.65);
+  }
+  .btn-ghost {
+    @apply bg-transparent text-berry-dark;
+    border-color: rgba(74, 18, 38, 0.25);
+  }
+  .btn-ghost:hover {
+    border-color: var(--berry);
+    background: rgba(122, 31, 61, 0.05);
+  }
+  .btn-disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  }
+
+  .chip {
+    @apply px-5 py-2.5 rounded-full text-[14.5px] font-medium transition-colors duration-200;
+    border: 1.5px solid rgba(251, 241, 230, 0.3);
+  }
+  .chip:hover {
+    background: rgba(251, 241, 230, 0.1);
+    border-color: var(--gold);
+  }
+  .chip-active {
+    background: var(--berry);
+    color: var(--paper);
+    border-color: var(--berry);
+  }
+
+  .card-surface {
+    @apply bg-paper rounded-card;
+    border: 1px solid rgba(122, 31, 61, 0.08);
+  }
+
+  .section-head {
+    @apply max-w-xl mb-10 sm:mb-12;
+  }
+  .section-head h2 {
+    @apply text-[28px] sm:text-[36px] lg:text-[42px] mt-3;
+  }
+  .section-head p {
+    @apply text-ink-soft text-[16.5px] mt-3;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-berry-dark/15 bg-paper px-4 py-3 text-[15px] text-ink placeholder:text-ink-soft/60 transition-colors duration-150 focus:outline-none focus:border-berry focus:ring-2 focus:ring-berry/15;
+  }
+  .input-field-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-100;
+  }
+  .field-label {
+    @apply block text-[13.5px] font-semibold text-berry-dark mb-1.5;
+  }
+  .field-error {
+    @apply text-[13px] text-red-600 mt-1;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-blush-soft rounded-xl;
+  }
+}
+
+/* ---------- Hero cake illustration (ported 1:1 from the original static design) ---------- */
+.cake-scene {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 440px;
+}
+.plate {
+  position: absolute;
+  bottom: 22px;
+  width: 300px;
+  height: 34px;
+  background: radial-gradient(ellipse at center, #ffffff 0%, #f1e2d8 70%, #e6d2c4 100%);
+  border-radius: 50%;
+  box-shadow: 0 18px 40px -12px rgba(74, 18, 38, 0.35);
+}
+.cake {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  animation: float 5s ease-in-out infinite;
+}
+.tier {
+  position: relative;
+  border-radius: 14px 14px 6px 6px;
+  box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.06);
+}
+.tier::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: -6px;
+  right: -6px;
+  height: 26px;
+  background-size: 24px 24px;
+  background-repeat: repeat-x;
+  background-position: 0 0;
+}
+.tier-1 {
+  width: 236px;
+  height: 96px;
+  background: var(--berry);
+}
+.tier-1::before {
+  background-image: radial-gradient(circle at 12px 10px, transparent 10px, #f6dce3 10.5px);
+}
+.tier-2 {
+  width: 184px;
+  height: 84px;
+  background: #d97c93;
+  margin-bottom: -8px;
+}
+.tier-2::before {
+  background-image: radial-gradient(circle at 12px 10px, transparent 10px, #fbeff2 10.5px);
+}
+.tier-3 {
+  width: 132px;
+  height: 70px;
+  background: var(--gold);
+  margin-bottom: -8px;
+}
+.tier-3::before {
+  background-image: radial-gradient(circle at 12px 10px, transparent 10px, #fcf3df 10.5px);
+}
+.candle {
+  position: absolute;
+  top: -58px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 38px;
+  background: repeating-linear-gradient(180deg, var(--pistachio) 0 8px, #fff 8px 16px);
+  border-radius: 3px;
+}
+.flame {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 16px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 50% 70%, #ffe39a, var(--gold) 60%, #b5741f 100%);
+  animation: flicker 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(200, 155, 60, 0.7));
+}
+
+.hero-stats div {
+  border-left: 2px solid var(--gold);
+  padding-left: 14px;
+}
+
+/* Flavour card gradients (ported from the original palette) */
+.flavour-card {
+  @apply rounded-card p-6 text-white relative overflow-hidden min-h-[150px] flex flex-col justify-end transition-transform duration-300;
+  box-shadow: 0 14px 28px -16px rgba(46, 28, 22, 0.4);
+}
+.flavour-card:hover {
+  transform: translateY(-6px);
+}
+.flavour-card::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+.f1 { background: linear-gradient(135deg, #5c1730, #8a2a4a); }
+.f2 { background: linear-gradient(135deg, #b23a57, #d97c93); }
+.f3 { background: linear-gradient(135deg, #6e7f53, #8fa97d); }
+.f4 { background: linear-gradient(135deg, #b5741f, #d9a441); }
+.f5 { background: linear-gradient(135deg, #4a2e22, #7a4b36); }
+.f6 { background: linear-gradient(135deg, #7a1f3d, #c89b3c); }
+
+.cta-block {
+  background: linear-gradient(135deg, var(--berry) 0%, var(--berry-dark) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.cta-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(251, 241, 230, 0.12) 2px, transparent 2.5px);
+  background-size: 26px 26px;
+  opacity: 0.5;
+}
+.cta-block > * {
+  position: relative;
+}
+
+.occasions-band {
+  background: var(--berry-dark);
+  color: var(--cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
